@@ -52,6 +52,16 @@ curl -X POST http://localhost:9001/v1/audio/transcriptions \
 }
 ```
 
+### Plain Text Response
+
+When `response_format=text`, the response body is plain text instead of JSON.
+
+Example:
+
+```text
+transcribed text
+```
+
 ### Error Response
 
 ```json

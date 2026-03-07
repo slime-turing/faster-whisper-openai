@@ -43,6 +43,7 @@ Important settings:
 - `STT_MODEL`: faster-whisper model name to load at startup
 - `STT_DEVICE`: `cuda`, `cpu`, or another `ctranslate2`-supported device
 - `STT_COMPUTE_TYPE`: compute precision such as `float16`, `int8_float16`, or `int8`
+- `STT_SKIP_MODEL_LOAD`: test-only flag that skips model download and initialization at startup
 - `STT_MAX_CONCURRENT_JOBS`: concurrent transcription jobs allowed at once
 - `STT_LONG_FORM_SECONDS`: threshold after which batched inference is used
 - `http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`: optional build/runtime proxy settings
@@ -78,3 +79,9 @@ GitHub Actions builds and publishes multi-arch images to GHCR.
 
 - Bind-mounted cache ownership matters. If `STT_UID` and `STT_GID` do not match the host directory owner, model downloads can fail with permission errors.
 - Cold starts after cache removal can take several minutes because the model has to be downloaded again.
+
+## Project Policies
+
+- License: [MIT](LICENSE)
+- Contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)

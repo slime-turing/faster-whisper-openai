@@ -42,6 +42,7 @@ class Settings:
     model: str = os.getenv("STT_MODEL", "large-v3-turbo")
     device: str = os.getenv("STT_DEVICE", "cuda")
     compute_type: str = os.getenv("STT_COMPUTE_TYPE", "float16")
+    skip_model_load: bool = getenv_bool("STT_SKIP_MODEL_LOAD", False)
     cpu_threads: int = getenv_int("STT_CPU_THREADS", 4)
     num_workers: int = getenv_int("STT_NUM_WORKERS", 2)
     beam_size: int = getenv_int("STT_BEAM_SIZE", 5)
@@ -101,7 +102,10 @@ def _load_model() -> tuple[WhisperModel, BatchedInferencePipeline]:
 
 
 _ensure_dirs()
-_model, _pipeline = _load_model()
+if settings.skip_model_load:
+    _model, _pipeline = None, None
+else:
+    _model, _pipeline = _load_model()
 
 
 @contextlib.asynccontextmanager
@@ -199,6 +203,9 @@ def _write_bytes_to_path(data: bytes, suffix: str) -> Path:
 
 
 def _transcribe_file(path: Path, language: str | None, prompt: str | None) -> dict[str, Any]:
+    if _model is None or _pipeline is None:
+        raise RuntimeError("Model is not loaded")
+
     transcribe_kwargs = {
         "beam_size": settings.beam_size,
         "best_of": settings.best_of,
