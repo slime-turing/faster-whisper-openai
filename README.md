@@ -5,6 +5,7 @@ OpenAI-compatible speech-to-text service built on `faster-whisper`, with HTTP an
 ## Features
 
 - OpenAI-style `POST /v1/audio/transcriptions` endpoint
+- Accepts `whisper-1` as an OpenAI-compatible alias for the configured backend model
 - WebSocket transcription stream at `GET /v1/realtime/transcriptions`
 - Configurable model, device, batching, and cleanup behavior through environment variables
 - Persistent model cache and temp storage through bind mounts

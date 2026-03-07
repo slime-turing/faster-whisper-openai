@@ -67,6 +67,8 @@ class Settings:
 
 
 settings = Settings()
+CONFIGURED_MODEL = settings.model.split("/")[-1].strip() or settings.model
+MODEL_ALIASES = {CONFIGURED_MODEL, "whisper-1"}
 
 app = FastAPI(title="Faster Whisper OpenAI Wrapper", default_response_class=ORJSONResponse)
 app.add_middleware(
@@ -190,9 +192,11 @@ def _save_upload_to_path(upload_file: UploadFile) -> Path:
 def _normalize_requested_model(model_name: str | None) -> str:
     requested = (model_name or settings.model).strip()
     if not requested:
-        return settings.model
+        return CONFIGURED_MODEL
     if "/" in requested:
         requested = requested.split("/")[-1]
+    if requested in MODEL_ALIASES:
+        return CONFIGURED_MODEL
     return requested
 
 
@@ -296,8 +300,9 @@ async def create_transcription(
     response_format: str = Form(default="json"),
 ) -> ORJSONResponse:
     requested_model = _normalize_requested_model(model)
-    if requested_model and requested_model != settings.model:
-        raise HTTPException(status_code=400, detail=f"Only model {settings.model} is available")
+    if requested_model and requested_model != CONFIGURED_MODEL:
+        supported_models = ", ".join(sorted(MODEL_ALIASES))
+        raise HTTPException(status_code=400, detail=f"Only models {supported_models} are available")
 
     temp_path = _save_upload_to_path(file)
     try:

@@ -61,6 +61,15 @@ class ApiSmokeTests(unittest.TestCase):
             },
         )
 
+    def test_http_transcription_accepts_whisper_alias(self):
+        response = self.client.post(
+            "/v1/audio/transcriptions",
+            files={"file": ("sample.wav", b"fake-audio", "audio/wav")},
+            data={"model": "whisper-1"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["model"], main_module.settings.model)
+
     def test_http_transcription_text_response(self):
         response = self.client.post(
             "/v1/audio/transcriptions",

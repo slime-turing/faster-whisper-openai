@@ -28,7 +28,7 @@ Example response:
 Multipart form fields:
 
 - `file`: required binary audio upload
-- `model`: optional model name, defaults to the configured server model
+- `model`: optional model name, defaults to the configured server model; `whisper-1` is accepted as an OpenAI-compatible alias
 - `language`: optional language hint
 - `prompt`: optional initial prompt
 - `response_format`: optional, `json` or `text`; defaults to `json`
@@ -37,7 +37,7 @@ Example request:
 
 ```bash
 curl -X POST http://localhost:9000/v1/audio/transcriptions \
-  -F model=large-v3-turbo \
+  -F model=whisper-1 \
   -F file=@sample.ogg
 ```
 
@@ -66,7 +66,7 @@ transcribed text
 
 ```json
 {
-  "detail": "Only model large-v3-turbo is available"
+  "detail": "Only models large-v3-turbo, whisper-1 are available"
 }
 ```
 
