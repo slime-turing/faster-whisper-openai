@@ -1,0 +1,57 @@
+services:
+  faster-whisper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+        - HTTP_PROXY
+        - HTTPS_PROXY
+        - NO_PROXY
+    image: ${IMAGE_NAME:-ghcr.io/slime-turing/faster-whisper-openai}:${IMAGE_TAG:-latest}
+    container_name: ${CONTAINER_NAME:-faster-whisper}
+    user: "${STT_UID:-1002}:${STT_GID:-1002}"
+    restart: unless-stopped
+    ports:
+      - "${STT_HOST_PORT:-9001}:9000"
+    gpus: all
+    environment:
+      STT_MODEL: ${STT_MODEL:-large-v3-turbo}
+      STT_DEVICE: ${STT_DEVICE:-cuda}
+      STT_COMPUTE_TYPE: ${STT_COMPUTE_TYPE:-float16}
+      STT_CPU_THREADS: ${STT_CPU_THREADS:-4}
+      STT_NUM_WORKERS: ${STT_NUM_WORKERS:-2}
+      STT_BEAM_SIZE: ${STT_BEAM_SIZE:-5}
+      STT_BEST_OF: ${STT_BEST_OF:-5}
+      STT_VAD_FILTER: ${STT_VAD_FILTER:-true}
+      STT_BATCH_SIZE: ${STT_BATCH_SIZE:-8}
+      STT_MAX_CONCURRENT_JOBS: ${STT_MAX_CONCURRENT_JOBS:-2}
+      STT_LONG_FORM_SECONDS: ${STT_LONG_FORM_SECONDS:-240}
+      STT_WEBSOCKET_MAX_SECONDS: ${STT_WEBSOCKET_MAX_SECONDS:-900}
+      STT_TMP_TTL_HOURS: ${STT_TMP_TTL_HOURS:-6}
+      STT_CACHE_MAX_GB: ${STT_CACHE_MAX_GB:-30}
+      STT_CLEANUP_INTERVAL_SECONDS: ${STT_CLEANUP_INTERVAL_SECONDS:-3600}
+      STT_ALLOW_ORIGINS: ${STT_ALLOW_ORIGINS:-*}
+      HF_HOME: /var/cache/stt/hf
+      XDG_CACHE_HOME: /var/cache/stt/xdg
+      STT_CACHE_DIR: /var/cache/stt
+      STT_TMP_DIR: /var/tmp/stt
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      http_proxy: ${http_proxy:-}
+      https_proxy: ${https_proxy:-}
+      no_proxy: ${no_proxy:-}
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-}
+    volumes:
+      - ./cache:/var/cache/stt
+      - ./tmp:/var/tmp/stt
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
