@@ -25,7 +25,7 @@ Set `STT_UID` and `STT_GID` in `.env` to match the host user that owns `cache/` 
 ### Docker Run
 
 ```bash
-docker run --rm -p 9001:9000 \
+docker run --rm -p 9000:9000 \
 	-e STT_MODEL=large-v3-turbo \
 	-e STT_DEVICE=cpu \
 	-v "$PWD/cache:/var/cache/stt" \
@@ -64,9 +64,9 @@ Human-readable endpoint and message documentation lives in [docs/API.md](docs/AP
 
 The service also exposes:
 
-- Swagger UI: `http://localhost:9001/docs`
-- OpenAPI schema: `http://localhost:9001/openapi.json`
-- Health endpoint: `http://localhost:9001/healthz`
+- Swagger UI: `http://localhost:9000/docs`
+- OpenAPI schema: `http://localhost:9000/openapi.json`
+- Health endpoint: `http://localhost:9000/healthz`
 
 ## Image Publishing
 

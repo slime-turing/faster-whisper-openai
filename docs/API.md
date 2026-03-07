@@ -36,7 +36,7 @@ Multipart form fields:
 Example request:
 
 ```bash
-curl -X POST http://localhost:9001/v1/audio/transcriptions \
+curl -X POST http://localhost:9000/v1/audio/transcriptions \
   -F model=large-v3-turbo \
   -F file=@sample.ogg
 ```
