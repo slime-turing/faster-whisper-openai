@@ -81,6 +81,21 @@ Status codes:
 
 Client sends JSON control messages and binary audio chunks.
 
+Server-side realtime chunk behavior:
+
+- Binary frames are appended to the current chunk file on disk.
+- The server auto-commits a chunk once it reaches `STT_WEBSOCKET_AUTO_COMMIT_BYTES`.
+- Default auto-commit threshold: `262144` bytes (`256 KiB`).
+- Set `STT_WEBSOCKET_AUTO_COMMIT_BYTES=0` to disable auto-commit and require explicit client `commit` messages.
+
+Example configuration:
+
+```env
+STT_WEBSOCKET_AUTO_COMMIT_BYTES=524288
+```
+
+That example auto-commits each chunk after it reaches `512 KiB`.
+
 #### Client control messages
 
 Start message:
@@ -172,4 +187,4 @@ Error:
 }
 ```
 
-Binary frames are treated as raw audio payload for the current buffer.
+Binary frames are treated as raw audio payload for the current chunk.
