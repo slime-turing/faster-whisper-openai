@@ -1,15 +1,5 @@
 services:
   faster-whisper:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
-        - HTTP_PROXY
-        - HTTPS_PROXY
-        - NO_PROXY
     image: ${IMAGE_NAME:-ghcr.io/slime-turing/faster-whisper-openai}:${IMAGE_TAG:-latest}
     container_name: ${CONTAINER_NAME:-faster-whisper}
     user: "${STT_UID:-1002}:${STT_GID:-1002}"

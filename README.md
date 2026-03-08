@@ -18,10 +18,12 @@ OpenAI-compatible speech-to-text service built on `faster-whisper`, with HTTP an
 ```bash
 cp .env.example .env
 mkdir -p cache tmp
+docker compose pull
 docker compose up -d
 ```
 
 Set `STT_UID` and `STT_GID` in `.env` to match the host user that owns `cache/` and `tmp/`.
+The Compose stack uses the published GHCR image by default instead of building locally.
 
 ### Docker Run
 
@@ -32,6 +34,15 @@ docker run --rm -p 9000:9000 \
 	-v "$PWD/cache:/var/cache/stt" \
 	-v "$PWD/tmp:/var/tmp/stt" \
 	ghcr.io/slime-turing/faster-whisper-openai:latest
+```
+
+### Optional Local Build
+
+If you want to test a local Dockerfile change before it lands in GHCR, build and point Compose at your local tag explicitly:
+
+```bash
+docker build -t faster-whisper-openai:dev .
+IMAGE_NAME=faster-whisper-openai IMAGE_TAG=dev docker compose up -d
 ```
 
 ## Configuration
